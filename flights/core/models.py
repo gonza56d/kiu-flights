@@ -12,6 +12,9 @@ class FlightEvent:
     departure_time: datetime
     arrival_time: datetime
 
+    def mask_flight_number(self):
+        self.flight_number = f'XX{self.flight_number[2:]}' if len(self.flight_number) > 2 else self.flight_number
+
 
 @dataclass
 class Journey:
