@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Annotated
 
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends
@@ -18,7 +17,7 @@ async def search_journeys(
         date: date,
         origin: str,
         destination: str,
-        command_bus: FlightsCommandBus = Annotated(FlightsCommandBus, Depends(Provide[FlightsContainer.command_bus])),
+        command_bus: FlightsCommandBus = Depends(Provide[FlightsContainer.command_bus]),
 ):
     action = SearchJourneysRequest(
         from_=origin,

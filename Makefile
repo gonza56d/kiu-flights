@@ -2,10 +2,10 @@ build:
 	docker compose build
 
 up:
-	docker compose run --rm --service-ports api
+	docker compose run --rm --service-ports app
 
 test:
-	docker compose run --rm --service-ports api pytest -vvv tests/
+	docker compose run --rm --service-ports app pytest -vvv tests/
 
 test-single:
-	docker compose run --rm --service-ports api pytest -vvv tests/ -k $(TEST)
+	docker compose run --rm --service-ports app pytest -vvv tests/ -k $(TEST)
