@@ -7,11 +7,21 @@ from flights.core.models import FlightEvent, Journey
 
 
 class TestSearchJourneysHandler:
+    """
+    Test business logic layer (called handler).
+
+    Mocks repository results to enforce different scenarios,
+    verifying that the business logic complies with the defined contract rules.
+
+    Brief descriptions for each test case:
+    * test_more_than_two_flight_events_limit ->
+    """
 
     def setup_method(self) -> None:
         self.handler = SearchJourneysHandler(journeys_repository=MagicMock())
 
     def test_no_flights_available(self):
+        """The repository didn't return anything, handler shouldn't return anything."""
         # Given no available flight events at the moment.
         self.handler.journeys_repository.get_flight_events.return_value = []
         # When any search is performed.
@@ -26,11 +36,7 @@ class TestSearchJourneysHandler:
         assert search_journeys_result == []
 
     def test_one_flight_without_connections(self):
-        """
-        Happy path test case.
-
-        Most straight forward finding one flight event without connections.
-        """
+        """The repository returned one flight event that matches the search."""
         # Given existing travel from Buenos Aires to Madrid that has a 12-hour duration.
         existing_flying_events = [
             FlightEvent(
@@ -70,11 +76,7 @@ class TestSearchJourneysHandler:
             assert journey.connections == len(journey.flight_events) - 1 if journey.flight_events else 0
 
     def test_two_flights_one_connection(self):
-        """
-        Happy path test case.
-
-        Second most straight forward finding two flight events resulting in one connection.
-        """
+        """The repository returned two flight events that, connected, match the search."""
         # Given existing flights from Buenos Aires to Madrid
         # and from Madrid to Paris, that have less than 4 hours waiting and
         # less than 24 hours of duration in total.
@@ -131,9 +133,8 @@ class TestSearchJourneysHandler:
 
     def test_more_than_two_flight_events_limit(self):
         """
-        Non-happy path.
-
-        Handle case where there are more than two flight events for the required travel.
+        The repository returned three flight events that "might" be connected
+        and would match the search, but rule sets a max of one connection (two flight events).
         """
         # Given three existing flight events that have less than 4 waiting hours between connections
         # and less than 24-hour duration in total.
@@ -176,9 +177,8 @@ class TestSearchJourneysHandler:
 
     def test_more_than_4_hour_connection_wait_limit(self):
         """
-        Non-happy path.
-
-        Handle case where the waiting time in one of the connections is more than 4 hours.
+        The repository returned two flight events that could be connected but waiting time is greater than 4 hours,
+        which is not allowed.
         """
         # Given existing flight events that have more than 4-hour waiting between connection.
         existing_flying_events = [
@@ -213,10 +213,8 @@ class TestSearchJourneysHandler:
 
     def test_more_than_24_hour_travel_limit(self):
         """
-        Non-happy path.
-
-        Handle case where the number of flight events and waiting time are ok, but
-        the total duration of the travel is more than 24 hours.
+        The repository returned two flight events that could be connected, but total flight time would be greater than
+        24 hours, which is not allowed.
         """
         # Given two existing flight events that in total last more than 24 hours
         existing_flying_events = [
@@ -251,10 +249,7 @@ class TestSearchJourneysHandler:
 
     def test_one_connection_between_many_flight_events(self):
         """
-        Complex happy path test case.
-
-        There are two flight events with one connection matching the search between many other
-        flight events.
+        The repository returned many different flight events. Two of these, when connected, match search criteria.
         """
         # Given two existing flight events that can make a connection
         # between many other unrelated flight events.
@@ -324,11 +319,7 @@ class TestSearchJourneysHandler:
             assert journey.connections == len(journey.flight_events) - 1 if journey.flight_events else 0
 
     def test_no_results(self):
-        """
-        Non-happy path.
-
-        Simply there are no flights that match the search.
-        """
+        """The repository returned flights, but none match search criteria."""
         # Given many flights existing
         existing_flying_events = [
             FlightEvent(
@@ -362,9 +353,8 @@ class TestSearchJourneysHandler:
 
     def test_more_than_one_possible_travel_path(self):
         """
-        Complex happy path test case.
-
-        There are two different possible travel paths between all the results.
+        The repository returned many different flight events. One matches the criteria by itself, with no connection
+        needed. Other two, when connected, match search criteria too. Both cases are returned as Journey results.
         """
         # Given many existing flight events and two have the same departure and destination city,
         # one with one scale and the other direct.
