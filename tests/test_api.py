@@ -316,21 +316,21 @@ class TestSearchJourneysApi:
                 'flight_number': 'IB5678',
                 'departure_city': 'MAD',
                 'arrival_city': 'BER',
-                'departure_datetime': '2021-12-01T13:00:00.000Z',
+                'departure_datetime': '2022-01-01T13:00:00.000Z',
                 'arrival_datetime': '2022-01-01T15:00:00.000Z'
             },
             {
                 'flight_number': 'IB9012',
                 'departure_city': 'MAD',
                 'arrival_city': 'PAR',
-                'departure_datetime': '2021-12-01T13:00:00.000Z',
+                'departure_datetime': '2022-01-01T13:00:00.000Z',
                 'arrival_datetime': '2022-01-01T15:00:00.000Z'
             },
             {
                 'flight_number': 'IB3456',
                 'departure_city': 'BER',
                 'arrival_city': 'MAD',
-                'departure_datetime': '2021-12-01T12:30:00.000Z',
+                'departure_datetime': '2022-01-01T12:30:00.000Z',
                 'arrival_datetime': '2022-01-01T15:00:00.000Z'
             }
         ]
@@ -355,7 +355,7 @@ class TestSearchJourneysApi:
                         'flight_number': 'XX5678',
                         'from': 'MAD',
                         'to': 'BER',
-                        'departure_datetime': '2021-12-01 13:00',
+                        'departure_datetime': '2022-01-01 13:00',
                         'arrival_datetime': '2022-01-01 15:00'
                     },
                 ]
@@ -462,21 +462,21 @@ class TestSearchJourneysApi:
                 'flight_number': 'IB5678',
                 'departure_city': 'BUE',
                 'arrival_city': 'MAD',
-                'departure_datetime': '2021-12-01T03:00:00.000Z',
+                'departure_datetime': '2022-01-01T03:00:00.000Z',
                 'arrival_datetime': '2022-01-01T15:00:00.000Z'
             },
             {
                 'flight_number': 'IB9012',
                 'departure_city': 'MAD',
                 'arrival_city': 'BER',
-                'departure_datetime': '2021-12-01T16:30:00.000Z',
+                'departure_datetime': '2022-01-01T16:30:00.000Z',
                 'arrival_datetime': '2022-01-01T17:00:00.000Z'
             },
             {
                 'flight_number': 'IB3456',
                 'departure_city': 'PAR',
                 'arrival_city': 'BER',
-                'departure_datetime': '2021-12-01T12:30:00.000Z',
+                'departure_datetime': '2022-01-01T12:30:00.000Z',
                 'arrival_datetime': '2022-01-01T15:00:00.000Z'
             }
         ]
@@ -526,7 +526,7 @@ class TestSearchJourneysApi:
             params={
                 'from': 'BUE',
                 'to': 'MAD',
-                'date': date(2021, 12, 31).isoformat(),
+                'date': date(2022, 1, 1).isoformat(),
             },
         )
 
