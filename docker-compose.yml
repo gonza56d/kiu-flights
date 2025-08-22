@@ -10,4 +10,25 @@ services:
       - .:/flights
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
     command: uvicorn flights.main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+
+  cache_refresher:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache_refresher
+    env_file:
+      - .env
+    volumes:
+      - .:/cache_refresher
+    depends_on:
+      - redis
+    command: python -u -m cache_refresher.main
+
+  redis:
+    image: redis:8
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"

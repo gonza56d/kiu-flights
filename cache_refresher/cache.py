@@ -17,5 +17,5 @@ class RedisCacheRepository(CacheRepository):
     def refresh_cache(self, results: list[FlightEvent]) -> None:
         self._connection.set(
             self._cache_key,
-            json.dumps([asdict(flight_event) for flight_event in results]),
+            json.dumps([asdict(flight_event) for flight_event in results], default=str),
         )

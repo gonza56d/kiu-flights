@@ -2,6 +2,7 @@ build:
 	docker compose build
 
 up:
+	docker compose up -d cache_refresher && \
 	docker compose run --rm --service-ports app
 
 test:

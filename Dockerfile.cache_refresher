@@ -1,0 +1,11 @@
+FROM python:3.12.3
+
+ENV PYTHONUNBUFFERED=1
+WORKDIR /cache_refresher
+
+COPY . .
+COPY flights .
+COPY requirements.txt .
+COPY .env .
+
+RUN pip install -r requirements.txt

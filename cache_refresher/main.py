@@ -1,3 +1,4 @@
+import logging
 from os import environ
 from time import sleep
 
@@ -6,11 +7,17 @@ from flights.api.repositories import JourneysHTTPRepository
 from cache_refresher.cache import RedisCacheRepository
 from cache_refresher.cache_refresher import CacheRefresher
 
+logging.basicConfig(level=logging.DEBUG)
+LOGGER = logging.getLogger(__name__)
+
 
 def main():
+    LOGGER.info("Evaluating if cache_refresher should run.")
     cache_refresh_every = environ.get('CACHE_REFRESH_EVERY', 0)
     if not cache_refresh_every:
+        LOGGER.info("Cache refresher disabled.")
         return
+    LOGGER.info("Cache refresher enabled.")
     cache_refresher = CacheRefresher(
         journey_repository=JourneysHTTPRepository(
             provider_base_url=environ.get('JOURNEYS_PROVIDER_BASE_URL', ''),
@@ -22,7 +29,9 @@ def main():
         ),
     )
     while True:
+        LOGGER.debug("Running cache_refresher.")
         cache_refresher.run()
+        LOGGER.debug("Cache refreshed.")
         sleep(int(cache_refresh_every))
 
 
