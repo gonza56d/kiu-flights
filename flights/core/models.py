@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 
 @dataclass
@@ -14,6 +14,14 @@ class FlightEvent:
 
     def mask_flight_number(self):
         self.flight_number = f'XX{self.flight_number[2:]}' if len(self.flight_number) > 2 else self.flight_number
+
+    def matches_from_and_time(self, from_: str, date_: date) -> bool:
+        """Return true if flight matches the filtered origin city, departure time and doesn't take more than 24 hours."""
+        return (
+            self.from_ == from_
+            and self.departure_time.date() == date_
+            and self.arrival_time - self.departure_time <= timedelta(hours=24)
+        )
 
 
 @dataclass

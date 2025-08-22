@@ -29,7 +29,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='MAD',
-                date_=date(2024, 9, 9)
+                date=date(2024, 9, 9)
             )
         )
         # Then the results shows an empty list
@@ -54,7 +54,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='MAD',
-                date_=date(2021, 12, 31)
+                date=date(2021, 12, 31)
             )
         )
 
@@ -103,7 +103,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='PAR',
-                date_=date(2021, 12, 31)
+                date=date(2021, 12, 31)
             )
         )
 
@@ -168,7 +168,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='ROM',
-                date_=date(2021, 12, 31)
+                date=date(2021, 12, 31)
             )
         )
 
@@ -204,7 +204,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='PAR',
-                date_=date(2021, 12, 31)
+                date=date(2021, 12, 31)
             )
         )
 
@@ -240,7 +240,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='TOK',
-                date_=date(2021, 12, 31)
+                date=date(2021, 12, 31)
             )
         )
 
@@ -290,7 +290,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='BER',
-                date_=date(2021, 12, 31)
+                date=date(2021, 12, 31)
             )
         )
 
@@ -344,7 +344,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='BER',
-                date_=date(2022, 1, 1)
+                date=date(2022, 1, 1)
             )
         )
 
@@ -395,7 +395,7 @@ class TestSearchJourneysHandler:
             SearchJourneys(
                 from_='BUE',
                 to='BER',
-                date_=date(2022, 1, 1)
+                date=date(2022, 1, 1)
             )
         )
 

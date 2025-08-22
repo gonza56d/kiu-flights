@@ -8,4 +8,4 @@ class SearchJourneys:
 
     from_: str
     to: str
-    date_: date
+    date: date

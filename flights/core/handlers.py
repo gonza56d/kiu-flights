@@ -17,11 +17,7 @@ class SearchJourneysHandler:
 
         for flight_event in flight_events:
             flight_event.mask_flight_number()
-            if (
-                flight_event.from_ == action.from_
-                and flight_event.departure_time.date() == action.date_
-                and flight_event.arrival_time - flight_event.departure_time <= timedelta(hours=24)
-            ):
+            if flight_event.matches_from_and_time(action.from_, action.date):
                 if flight_event.to == action.to:  # direct fly case
                     journeys.append(Journey(flight_events=[flight_event]))
                 else:   # search possible connections
