@@ -27,7 +27,7 @@ class TestSearchJourneysHandler:
                 arrival_time=datetime(2022, 1, 1, 12),
             )
         ]
-        self.handler.journeys_repository.return_value = existing_flying_events
+        self.handler.journeys_repository.get_flight_events.return_value = existing_flying_events
 
         # When a search is from Buenos Aires to Madrid for the given departure date is made
         search_journeys_result = self.handler(
@@ -80,7 +80,7 @@ class TestSearchJourneysHandler:
                 arrival_time=datetime(2022, 1, 1, 16),
             ),
         ]
-        self.handler.journeys_repository.return_value = existing_flying_events
+        self.handler.journeys_repository.get_flight_events.return_value = existing_flying_events
 
         # When a search for travel from Buenos Aires to Paris in the same departure time is made.
         search_journeys_result = self.handler(
@@ -99,7 +99,7 @@ class TestSearchJourneysHandler:
                         flight_number='XX1234',
                         from_='BUE',
                         to='MAD',
-                        departure_time=datetime(2021, 12, 31, 23, 59),
+                        departure_time=datetime(2021, 12, 31, 23),
                         arrival_time=datetime(2022, 1, 1, 12),
                     ),
                     FlightEvent(
@@ -146,7 +146,7 @@ class TestSearchJourneysHandler:
                 arrival_time=datetime(2022, 1, 1, 19),
             ),
         ]
-        self.handler.journeys_repository.return_value = existing_flying_events
+        self.handler.journeys_repository.get_flight_events.return_value = existing_flying_events
 
         # When a search for travel from Buenos Aires to Paris in the same departure time is made.
         search_journeys_result = self.handler(
@@ -183,7 +183,7 @@ class TestSearchJourneysHandler:
                 arrival_time=datetime(2022, 1, 1, 20),
             ),
         ]
-        self.handler.journeys_repository.return_value = existing_flying_events
+        self.handler.journeys_repository.get_flight_events.return_value = existing_flying_events
 
         # When a search that matches cities and time is made
         search_journeys_result = self.handler(
@@ -221,7 +221,7 @@ class TestSearchJourneysHandler:
                 arrival_time=datetime(2022, 1, 2, 1),
             ),
         ]
-        self.handler.journeys_repository.return_value = existing_flying_events
+        self.handler.journeys_repository.get_flight_events.return_value = existing_flying_events
 
         # When a search that matches cities and time is made
         search_journeys_result = self.handler(
@@ -274,7 +274,7 @@ class TestSearchJourneysHandler:
                 arrival_time=datetime(2022, 1, 1, 15),
             ),
         ]
-        self.handler.journeys_repository.return_value = existing_flying_events
+        self.handler.journeys_repository.get_flight_events.return_value = existing_flying_events
 
         # When a search that matches cities and time is made
         search_journeys_result = self.handler(
@@ -307,7 +307,7 @@ class TestSearchJourneysHandler:
             )
         ]
         for journey in search_journeys_result:
-            assert journey.connections == len(journey.flight_events) if journey.flight_events else 0
+            assert journey.connections == len(journey.flight_events) - 1 if journey.flight_events else 0
 
     def test_no_results(self):
         """
@@ -332,7 +332,7 @@ class TestSearchJourneysHandler:
                 arrival_time=datetime(2022, 1, 1, 15),
             ),
         ]
-        self.handler.journeys_repository.return_value = existing_flying_events
+        self.handler.journeys_repository.get_flight_events.return_value = existing_flying_events
 
         # When a search that doesn't match any departure city
         search_journeys_result = self.handler(
@@ -384,7 +384,7 @@ class TestSearchJourneysHandler:
                 arrival_time=datetime(2022, 1, 1, 15),
             ),
         ]
-        self.handler.journeys_repository.return_value = existing_flying_events
+        self.handler.journeys_repository.get_flight_events.return_value = existing_flying_events
 
         # When a search that doesn't match any departure city
         search_journeys_result = self.handler(
@@ -428,4 +428,4 @@ class TestSearchJourneysHandler:
             )
         ]
         for journey in search_journeys_result:
-            assert journey.connections == len(journey.flight_events) if journey.flight_events else 0
+            assert journey.connections == len(journey.flight_events) - 1 if journey.flight_events else 0
