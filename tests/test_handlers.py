@@ -11,6 +11,20 @@ class TestSearchJourneysHandler:
     def setup_method(self) -> None:
         self.handler = SearchJourneysHandler(journeys_repository=MagicMock())
 
+    def test_no_flights_available(self):
+        # Given no available flight events at the moment.
+        self.handler.journeys_repository.get_flight_events.return_value = []
+        # When any search is performed.
+        search_journeys_result = self.handler(
+            SearchJourneys(
+                from_='BUE',
+                to='MAD',
+                date_=date(2024, 9, 9)
+            )
+        )
+        # Then the results shows an empty list
+        assert search_journeys_result == []
+
     def test_one_flight_without_connections(self):
         """
         Happy path test case.
