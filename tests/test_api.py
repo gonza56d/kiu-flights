@@ -5,9 +5,9 @@ from pytest_httpx import HTTPXMock
 
 
 @pytest.mark.asyncio
-class TestApi:
+class TestSearchJourneysApi:
 
-    async def test_search_journeys_success__one_flight_no_connections(
+    async def test_one_flight_without_connections(
         self,
         async_client,
         httpx_mock: HTTPXMock,
@@ -17,7 +17,7 @@ class TestApi:
 
         Most straight forward finding one flight event without connections.
         """
-        # Given an existing travel from Buenos Aires to Madrid
+        # Given existing travel from Buenos Aires to Madrid
         # that has 12-hour duration.
         provider_api_response = [
             {
@@ -63,7 +63,7 @@ class TestApi:
         assert search_journeys_response.status_code == HTTPStatus.OK
         assert search_journeys_response.json() == expected_search_journeys_response
 
-    async def test_search_journeys_success__two_flights_one_connection(
+    async def test_two_flights_one_connection(
         self,
         async_client,
         httpx_mock: HTTPXMock,
@@ -103,7 +103,7 @@ class TestApi:
                 'connections': 1,
                 'path': [
                     {
-                        'flight_number': 'XX5678',
+                        'flight_number': 'XX1234',
                         'from': 'BUE',
                         'to': 'MAD',
                         'departure_time': '2021-12-31 23:59',
@@ -120,7 +120,7 @@ class TestApi:
             }
         ]
 
-        # When a request to search for a travel from Buenos Aires to Paris in the
+        # When a request to search for travel from Buenos Aires to Paris in the
         # same departure time is made.
         search_journeys_response = await async_client.get(
             '/journeys/search',
@@ -135,7 +135,7 @@ class TestApi:
         assert search_journeys_response.status_code == HTTPStatus.OK
         assert search_journeys_response.json() == expected_search_journeys_response
 
-    async def test_search_journeys_no_results__more_than_two_flight_events_limit(
+    async def test_more_than_two_flight_events_limit(
         self,
         async_client,
         httpx_mock: HTTPXMock,
@@ -192,7 +192,7 @@ class TestApi:
         assert search_journeys_response.status_code == HTTPStatus.OK
         assert search_journeys_response.json() == []
 
-    async def test_search_journeys_no_results__more_than_4_hour_connection_wait_limit(
+    async def test_more_than_4_hour_connection_wait_limit(
         self,
         async_client,
         httpx_mock: HTTPXMock,
@@ -200,7 +200,7 @@ class TestApi:
         """
         Non-happy path.
 
-        Handle case where the waiting time in one of the conections is more than 4 hours.
+        Handle case where the waiting time in one of the connections is more than 4 hours.
         """
         # Given existing flight events that have more than 4-hour waiting between connection.
         provider_api_response = [
@@ -241,7 +241,7 @@ class TestApi:
         assert search_journeys_response.status_code == HTTPStatus.OK
         assert search_journeys_response.json() == []
 
-    async def test_search_journeys_no_results__more_than_24_hour_travel_limit(
+    async def test_more_than_24_hour_travel_limit(
         self,
         async_client,
         httpx_mock: HTTPXMock,
@@ -291,7 +291,7 @@ class TestApi:
         assert search_journeys_response.status_code == HTTPStatus.OK
         assert search_journeys_response.json() == []
 
-    async def test_search_journeys_success__complex_case_one_connection_between_many_flight_events(
+    async def test_one_connection_between_many_flight_events(
         self,
         async_client,
         httpx_mock: HTTPXMock,
@@ -327,7 +327,7 @@ class TestApi:
                 'arrival_datetime': '2022-01-01T15:00:00.000Z'
             },
             {
-                'flight_number': 'IB9012',
+                'flight_number': 'IB3456',
                 'departure_city': 'BER',
                 'arrival_city': 'MAD',
                 'departure_datetime': '2021-12-01T12:30:00.000Z',
@@ -367,7 +367,7 @@ class TestApi:
             '/journeys/search',
             params={
                 'from': 'BUE',
-                'to': 'MAD',
+                'to': 'BER',
                 'date': date(2021, 12, 31).isoformat(),
             },
         )
@@ -376,7 +376,7 @@ class TestApi:
         assert search_journeys_response.status_code == HTTPStatus.OK
         assert search_journeys_response.json() == expected_search_journeys_response
 
-    async def test_search_journeys_no_results(
+    async def test_no_results(
         self,
         async_client,
         httpx_mock: HTTPXMock,
@@ -410,7 +410,7 @@ class TestApi:
                 'arrival_datetime': '2022-01-01T15:00:00.000Z'
             },
             {
-                'flight_number': 'IB9012',
+                'flight_number': 'IB3456',
                 'departure_city': 'BER',
                 'arrival_city': 'MAD',
                 'departure_datetime': '2021-12-01T12:30:00.000Z',
@@ -428,12 +428,108 @@ class TestApi:
         search_journeys_response = await async_client.get(
             '/journeys/search',
             params={
-                'from': 'BUE',
-                'to': 'LON',
-                'date': date(2021, 12, 31).isoformat(),
+                'from': 'BER',
+                'to': 'MAD',
+                'date': date(2022, 2, 3).isoformat(),
             },
         )
 
         # Then the status code is 200 and the json shows empty results
         assert search_journeys_response.status_code == HTTPStatus.OK
         assert search_journeys_response.json() == []
+
+    async def test_more_than_one_possible_travel_path(
+        self,
+        async_client,
+        httpx_mock: HTTPXMock,
+    ):
+        """
+        Complex happy path test case.
+
+        There are two different possible travel paths between all the results.
+        """
+        # Given many existing flight events and two have the same departure and destination city,
+        # one with one scale and the other direct.
+        provider_api_response = [
+            {  # direct
+                'flight_number': 'IB1234',
+                'departure_city': 'BUE',
+                'arrival_city': 'BER',
+                'departure_datetime': '2022-01-01T01:00:00.000Z',
+                'arrival_datetime': '2022-01-01T12:00:00.000Z'
+            },
+            {  # next two: one scale
+                'flight_number': 'IB5678',
+                'departure_city': 'BUE',
+                'arrival_city': 'MAD',
+                'departure_datetime': '2021-12-01T03:00:00.000Z',
+                'arrival_datetime': '2022-01-01T15:00:00.000Z'
+            },
+            {
+                'flight_number': 'IB9012',
+                'departure_city': 'MAD',
+                'arrival_city': 'BER',
+                'departure_datetime': '2021-12-01T16:30:00.000Z',
+                'arrival_datetime': '2022-01-01T17:00:00.000Z'
+            },
+            {
+                'flight_number': 'IB3456',
+                'departure_city': 'PAR',
+                'arrival_city': 'BER',
+                'departure_datetime': '2021-12-01T12:30:00.000Z',
+                'arrival_datetime': '2022-01-01T15:00:00.000Z'
+            }
+        ]
+        httpx_mock.add_response(
+            method='GET',
+            url='https://mock.apidog.com/m1/814105-793312-default/flight-events',
+            status_code=HTTPStatus.OK,
+            json=provider_api_response,
+        )
+        expected_search_journeys_response = [
+            {
+                'connections': 0,
+                'path': [
+                    {  # direct
+                        'flight_number': 'XX1234',
+                        'from': 'BUE',
+                        'to': 'BER',
+                        'departure_datetime': '2022-01-01 01:00',
+                        'arrival_datetime': '2022-01-01 12:00',
+                    },
+                ]
+            },
+            {
+                'connections': 1,
+                'path': [
+                    {  # one scale
+                        'flight_number': 'XX5678',
+                        'from': 'BUE',
+                        'to': 'MAD',
+                        'departure_datetime': '2021-12-01 03:00',
+                        'arrival_datetime': '2022-01-01 15:00',
+                    },
+                    {
+                        'flight_number': 'XX9012',
+                        'from': 'MAD',
+                        'to': 'BER',
+                        'departure_datetime': '2021-12-01 16:30',
+                        'arrival_datetime': '2022-01-01 17:00',
+                    },
+                ]
+            }
+        ]
+
+        # When a request from Buenos Aires to Berlin for the given departure date is made
+        search_journeys_response = await async_client.get(
+            '/journeys/search',
+            params={
+                'from': 'BUE',
+                'to': 'MAD',
+                'date': date(2021, 12, 31).isoformat(),
+            },
+        )
+
+        # Then the status code is 200 and the json shows the two different travel possibilities
+        assert search_journeys_response.status_code == HTTPStatus.OK
+        assert search_journeys_response.json() == expected_search_journeys_response
