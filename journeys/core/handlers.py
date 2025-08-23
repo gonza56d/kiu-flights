@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 
 from journeys.core.actions import SearchJourneys
-from journeys.core.models import Journey, FlightEvent
+from journeys.core.models import Journey, FlightEvent, JourneyBuilder
 from journeys.core.repositories import FlightsRepository
 
 
@@ -15,21 +15,15 @@ class SearchJourneysHandler:
         """Build and return possible journeys from flight events."""
         journeys: list[Journey] = []
         flight_events = self.flights_repository.get_flight_events()
+        builder = JourneyBuilder()
 
         for flight_event in flight_events:
-            flight_event.mask_flight_number()
             if flight_event.matches_from_and_time(action.from_, action.date):
                 if flight_event.to == action.to:  # direct fly case
-                    journeys.append(Journey(flight_events=[flight_event]))
+                    journeys.append(builder.build_direct(flight_event))
                 else:   # search possible connections
-                    available_connections: list[FlightEvent] = self.__search_connections(
-                        action=action,
-                        initial_flight_event=flight_event,
-                        flight_events=flight_events,
-                    )
-                    for connection in available_connections:
-                        connection.mask_flight_number()
-                        journeys.append(Journey(flight_events=[flight_event, connection]))
+                    for connection in self.__search_connections(action, flight_event, flight_events):
+                        journeys.append(builder.build_with_connection(flight_event, connection))
 
         return journeys
 

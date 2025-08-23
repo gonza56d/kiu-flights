@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 
@@ -35,3 +36,19 @@ class Journey:
         if not self.flight_events:
             return 0
         return len(self.flight_events) - 1
+
+
+class JourneyBuilder:
+    """Responsible for creating Journey objects from flight events."""
+
+    def build_direct(self, flight_event: FlightEvent) -> Journey:
+        fe = deepcopy(flight_event)
+        fe.mask_flight_number()
+        return Journey(flight_events=[fe])
+
+    def build_with_connection(self, first: FlightEvent, second: FlightEvent) -> Journey:
+        first_copy = deepcopy(first)
+        second_copy = deepcopy(second)
+        first_copy.mask_flight_number()
+        second_copy.mask_flight_number()
+        return Journey(flight_events=[first_copy, second_copy])

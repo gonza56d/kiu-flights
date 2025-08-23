@@ -8,8 +8,11 @@ from journeys.app.repositories import FlightsHTTPRepository
 from cache_refresher.cache import RedisCacheRepository
 from cache_refresher.cache_refresher import CacheRefresher
 
-logging.basicConfig(level=logging.DEBUG)
-LOGGER = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(levelname)s: %(name)s",
+)
+LOGGER = logging.getLogger('cache-refresher')
 
 
 def main():
