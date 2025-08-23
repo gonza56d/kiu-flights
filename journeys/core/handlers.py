@@ -12,6 +12,7 @@ class SearchJourneysHandler:
     flights_repository: FlightsRepository
 
     def __call__(self, action: SearchJourneys) -> list[Journey]:
+        """Build and return possible journeys from flight events."""
         journeys: list[Journey] = []
         flight_events = self.flights_repository.get_flight_events()
 

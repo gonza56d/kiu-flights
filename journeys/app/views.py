@@ -48,7 +48,6 @@ async def search_journeys(
                     'to': flight_event.to,
                     'departure_time': flight_event.departure_time,
                     'arrival_time': flight_event.arrival_time,
-
                 }
             ) for flight_event in result.flight_events],
         )
