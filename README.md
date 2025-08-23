@@ -13,6 +13,14 @@ Kiu Journeys is a Python-based application designed to facilitate the exploratio
 7. Run the application: `make up`
 8. (Optional) Play with the cache: You can disable it by setting `CACHE_REFRESH_EVERY=0` in `.env`, or enabling warm cache to refresh every x seconds by setting any number greater than 0.
 
+## Usage 🎮
+
+- The project exposes an endpoint in http://localhost:8000/journeys/search for fetching available journeys.
+- Required query params are: `date` (YYYY-MM-DD), `origin` and `destination` (both are three-character city codes).
+- Sample request with existing results can be: http://localhost:8000/journeys/search?date=2021-12-31&origin=MAD&destination=BUE
+- Not sending any of the required query params will return a client error (422/400 status codes).
+- Enabling cache in `.env` will reduce the response time from ~600ms to ~25ms.
+
 ## Repository Structure 📂
 #### In this repo, you will find three main python packages:
 

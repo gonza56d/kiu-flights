@@ -25,8 +25,8 @@ async def search_journeys(
 
     Args:
         date (date): The desired date of departure.
-        origin (str): 3-letter code indicating city of departure.
-        destination (str): 3-letter code indicating city of destination.
+        origin (str): 3-character code indicating city of departure.
+        destination (str): 3-character code indicating city of destination.
 
     Returns:
         list[SearchJourneysResponse]: n possible journeys, from which each of these
