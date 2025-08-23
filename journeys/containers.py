@@ -72,8 +72,8 @@ class JourneysContainer(DeclarativeContainer):
         cache_key=config.cache_key,
     ) if use_cache else Factory(
         FlightsHTTPRepository,
-        provider_base_url=config.journeys_provider_base_url,
-        endpoint=config.journeys_provider_endpoint_v1,
+        provider_base_url=config.flights_provider_base_url,
+        endpoint=config.flights_provider_endpoint_v1,
     )
 
     command_bus: Factory[JourneysCommandBus] = Factory(

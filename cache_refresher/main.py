@@ -21,8 +21,8 @@ def main():
     LOGGER.info("Cache refresher enabled.")
     cache_refresher = CacheRefresher(
         flights_repository=FlightsHTTPRepository(
-            provider_base_url=environ.get('JOURNEYS_PROVIDER_BASE_URL', ''),
-            endpoint=environ.get('JOURNEYS_PROVIDER_ENDPOINT_V1', ''),
+            provider_base_url=environ.get('FLIGHTS_PROVIDER_BASE_URL', ''),
+            endpoint=environ.get('FLIGHTS_PROVIDER_ENDPOINT_V1', ''),
         ),
         cache_repository=RedisCacheRepository(
             repository_uri=environ.get('CACHE_URI', ''),
