@@ -1,7 +1,15 @@
-from fastapi import FastAPI
+import logging
+
+from fastapi import FastAPI, Request
 
 from journeys.app import views
 from journeys.containers import JourneysContainer
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(levelname)s: %(name)s:\nMessage: %(message)s\nProps=%(props)s",
+)
+logger = logging.getLogger('journeys-app')
 
 
 def create_app() -> FastAPI:
@@ -17,3 +25,23 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    body = await request.body()
+    response = await call_next(request)
+
+    log_data = {
+        'request': {
+            'method': request.method,
+            'url': str(request.url),
+        },
+        'response': {
+            'status_code': response.status_code,
+            'body': body.decode('utf-8') if body else None,
+        }
+    }
+    logger.info('Request processed.', extra={'props': log_data})
+
+    return response
+

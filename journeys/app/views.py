@@ -4,14 +4,12 @@ from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends
 
 from journeys.app.models import FlightEvent, SearchJourneysRequest, SearchJourneysResponse
-from journeys.app.router_handlers import JourneysRouteHandler
 from journeys.core.models import Journey
 from journeys.containers import JourneysContainer, JourneysCommandBus
 
 router = APIRouter(
     prefix='/journeys',
     tags=['journeys'],
-    route_class=JourneysRouteHandler,
 )
 
 @router.get('/search', response_model=list[SearchJourneysResponse])
