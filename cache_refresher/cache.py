@@ -19,4 +19,3 @@ class RedisCacheRepository(CacheRepository):
             self._cache_key,
             json.dumps([asdict(flight_event) for flight_event in results], default=str),
         )
-#test commit
