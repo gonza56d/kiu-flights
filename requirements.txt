@@ -1,5 +1,6 @@
 dependency_injector==4.48.1
 fastapi==0.116.1
+httpx==0.28.1
 pytest==8.4.1
 redis==6.4.0
 requests==2.32.5
