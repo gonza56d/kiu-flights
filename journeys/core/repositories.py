@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from flights.core.models import FlightEvent
+from journeys.core.models import FlightEvent
 
 
 class JourneysRepository(ABC):

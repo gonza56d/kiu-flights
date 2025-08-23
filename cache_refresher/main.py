@@ -3,7 +3,7 @@ import sys
 from os import environ
 from time import sleep
 
-from flights.app.repositories import JourneysHTTPRepository
+from journeys.app.repositories import JourneysHTTPRepository
 
 from cache_refresher.cache import RedisCacheRepository
 from cache_refresher.cache_refresher import CacheRefresher

@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass
 from cache_refresher.repositories import CacheRepository
-from flights.core.repositories import JourneysRepository
+from journeys.core.repositories import JourneysRepository
 
 
 @dataclass

@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /cache_refresher
 
 COPY . .
-COPY flights .
+COPY journeys .
 COPY requirements.txt .
 COPY .env .
 

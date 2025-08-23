@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 
-from flights.core.actions import SearchJourneys
+from journeys.core.actions import SearchJourneys
 
 
 class SearchJourneysRequest(BaseModel):

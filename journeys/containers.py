@@ -5,13 +5,13 @@ from typing import Any
 from dependency_injector.containers import DeclarativeContainer, WiringConfiguration
 from dependency_injector.providers import Configuration, Factory
 
-from flights.app.repositories import JourneysHTTPRepository, JourneysCacheRepository
-from flights.core.actions import SearchJourneys
-from flights.core.handlers import SearchJourneysHandler
-from flights.core.repositories import JourneysRepository
+from journeys.app.repositories import JourneysHTTPRepository, JourneysCacheRepository
+from journeys.core.actions import SearchJourneys
+from journeys.core.handlers import SearchJourneysHandler
+from journeys.core.repositories import JourneysRepository
 
 
-class FlightsCommandBus:
+class JourneysCommandBus:
     """
     A lightweight command bus for dispatching actions to their handlers.
 
@@ -27,7 +27,7 @@ class FlightsCommandBus:
 
     def __init__(self, bus: dict[Any, Any]):
         for action, handler in bus.items():
-            FlightsCommandBus._commands[action.provides.__name__] = handler
+            JourneysCommandBus._commands[action.provides.__name__] = handler
 
     def handle(self, action) -> Any:
         """
@@ -39,29 +39,29 @@ class FlightsCommandBus:
         Returns:
             Any: The result of executing the action’s handler.
         """
-        command = FlightsCommandBus._commands[action.__class__.__name__]()
+        command = JourneysCommandBus._commands[action.__class__.__name__]()
         return command(action)
 
 
-class FlightsContainer(DeclarativeContainer):
+class JourneysContainer(DeclarativeContainer):
     """
-    Dependency injection container for the Flights service.
+    Dependency injection container for the Journeys service.
 
     This container wires together modules, repositories, actions, and
-    handlers required by the Flights domain. It provides configuration
+    handlers required by the Journeys domain. It provides configuration
     and factories for external services and the command bus.
 
     Attributes:
         config (Configuration): Holds service configuration parameters.
         journeys_repository (Factory[JourneysRepository]): Factory for
             creating a journeys repository backed by an HTTP provider.
-        command_bus (Factory[FlightsCommandBus]): Factory for the command bus,
+        command_bus (Factory[JourneysCommandBus]): Factory for the command bus,
             mapping actions to their handlers.
     """
     wiring_config = WiringConfiguration(modules=[
-        'flights.app.models',
-        'flights.app.repositories',
-        'flights.app.views',
+        'journeys.app.models',
+        'journeys.app.repositories',
+        'journeys.app.views',
     ])
     config = Configuration()
 
@@ -76,8 +76,8 @@ class FlightsContainer(DeclarativeContainer):
         endpoint=config.journeys_provider_endpoint_v1,
     )
 
-    command_bus: Factory[FlightsCommandBus] = Factory(
-        FlightsCommandBus,
+    command_bus: Factory[JourneysCommandBus] = Factory(
+        JourneysCommandBus,
         {
             Factory(SearchJourneys): Factory(
                 SearchJourneysHandler,

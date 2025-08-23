@@ -1,12 +1,11 @@
-from dataclasses import asdict
 from datetime import date
 
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends
 
-from flights.app.models import FlightEvent, SearchJourneysRequest, SearchJourneysResponse
-from flights.core.models import Journey
-from flights.containers import FlightsContainer, FlightsCommandBus
+from journeys.app.models import FlightEvent, SearchJourneysRequest, SearchJourneysResponse
+from journeys.core.models import Journey
+from journeys.containers import JourneysContainer, JourneysCommandBus
 
 router = APIRouter(
     prefix='/journeys',
@@ -19,7 +18,7 @@ async def search_journeys(
         date: date,
         origin: str,
         destination: str,
-        command_bus: FlightsCommandBus = Depends(Provide[FlightsContainer.command_bus]),
+        command_bus: JourneysCommandBus = Depends(Provide[JourneysContainer.command_bus]),
 ):
     """
     Search journeys available for given date, with the right origin and destinations.

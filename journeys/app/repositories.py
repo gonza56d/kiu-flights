@@ -7,8 +7,8 @@ from dataclasses import dataclass
 
 from redis import Redis
 
-from flights.core.models import FlightEvent
-from flights.core.repositories import JourneysRepository
+from journeys.core.models import FlightEvent
+from journeys.core.repositories import JourneysRepository
 
 
 @dataclass

@@ -4,7 +4,7 @@ import json
 from redis import Redis
 
 from cache_refresher.repositories import CacheRepository
-from flights.core.models import FlightEvent
+from journeys.core.models import FlightEvent
 
 
 class RedisCacheRepository(CacheRepository):

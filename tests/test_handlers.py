@@ -1,9 +1,9 @@
 from datetime import datetime, date
 from unittest.mock import MagicMock
 
-from flights.core.actions import SearchJourneys
-from flights.core.handlers import SearchJourneysHandler
-from flights.core.models import FlightEvent, Journey
+from journeys.core.actions import SearchJourneys
+from journeys.core.handlers import SearchJourneysHandler
+from journeys.core.models import FlightEvent, Journey
 
 
 class TestSearchJourneysHandler:

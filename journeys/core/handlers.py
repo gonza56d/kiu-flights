@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from datetime import timedelta
 
-from flights.core.actions import SearchJourneys
-from flights.core.models import Journey, FlightEvent
-from flights.core.repositories import JourneysRepository
+from journeys.core.actions import SearchJourneys
+from journeys.core.models import Journey, FlightEvent
+from journeys.core.repositories import JourneysRepository
 
 
 @dataclass
