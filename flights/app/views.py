@@ -4,7 +4,7 @@ from datetime import date
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends
 
-from flights.api.models import FlightEvent, SearchJourneysRequest, SearchJourneysResponse
+from flights.app.models import FlightEvent, SearchJourneysRequest, SearchJourneysResponse
 from flights.core.models import Journey
 from flights.containers import FlightsContainer, FlightsCommandBus
 

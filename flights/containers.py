@@ -1,10 +1,11 @@
 """Declarative IoC layer."""
+from os import environ
 from typing import Any
 
 from dependency_injector.containers import DeclarativeContainer, WiringConfiguration
 from dependency_injector.providers import Configuration, Factory
 
-from flights.api.repositories import JourneysHTTPRepository
+from flights.app.repositories import JourneysHTTPRepository, JourneysCacheRepository
 from flights.core.actions import SearchJourneys
 from flights.core.handlers import SearchJourneysHandler
 from flights.core.repositories import JourneysRepository
@@ -58,20 +59,23 @@ class FlightsContainer(DeclarativeContainer):
             mapping actions to their handlers.
     """
     wiring_config = WiringConfiguration(modules=[
-        'flights.api.models',
-        'flights.api.repositories',
-        'flights.api.views',
-        'flights.core.actions',
-        'flights.core.handlers',
-        'flights.core.models',
-        'flights.core.repositories',
+        'flights.app.models',
+        'flights.app.repositories',
+        'flights.app.views',
     ])
     config = Configuration()
+
+    use_cache = bool(int(environ.get('CACHE_REFRESH_EVERY', 0)))
     journeys_repository: Factory[JourneysRepository] = Factory(
+        JourneysCacheRepository,
+        repository_uri=config.cache_uri,
+        cache_key=config.cache_key,
+    ) if use_cache else Factory(
         JourneysHTTPRepository,
         provider_base_url=config.journeys_provider_base_url,
         endpoint=config.journeys_provider_endpoint_v1,
     )
+
     command_bus: Factory[FlightsCommandBus] = Factory(
         FlightsCommandBus,
         {
