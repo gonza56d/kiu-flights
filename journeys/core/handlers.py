@@ -3,17 +3,17 @@ from datetime import timedelta
 
 from journeys.core.actions import SearchJourneys
 from journeys.core.models import Journey, FlightEvent
-from journeys.core.repositories import JourneysRepository
+from journeys.core.repositories import FlightsRepository
 
 
 @dataclass
 class SearchJourneysHandler:
 
-    journeys_repository: JourneysRepository
+    flights_repository: FlightsRepository
 
     def __call__(self, action: SearchJourneys) -> list[Journey]:
         journeys: list[Journey] = []
-        flight_events = self.journeys_repository.get_flight_events()
+        flight_events = self.flights_repository.get_flight_events()
 
         for flight_event in flight_events:
             flight_event.mask_flight_number()

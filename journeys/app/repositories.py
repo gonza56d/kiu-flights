@@ -8,12 +8,12 @@ from dataclasses import dataclass
 from redis import Redis
 
 from journeys.core.models import FlightEvent
-from journeys.core.repositories import JourneysRepository
+from journeys.core.repositories import FlightsRepository
 
 
 @dataclass
-class JourneysHTTPRepository(JourneysRepository):
-    """Implement JourneyRepository interface with a REST provider through HTTP."""
+class FlightsHTTPRepository(FlightsRepository):
+    """Implement FlightsRepository interface with an HTTP provider."""
 
     provider_base_url: str
     endpoint: str
@@ -34,7 +34,8 @@ class JourneysHTTPRepository(JourneysRepository):
         ]
 
 
-class JourneysCacheRepository(JourneysRepository):
+class FlightsCacheRepository(FlightsRepository):
+    """Implement FlightsRepository interface with a Redis cache provider."""
 
     def __init__(self, repository_uri: str, cache_key: str):
         self._connection = Redis.from_url(repository_uri)

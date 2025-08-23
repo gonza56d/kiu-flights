@@ -5,10 +5,10 @@ from typing import Any
 from dependency_injector.containers import DeclarativeContainer, WiringConfiguration
 from dependency_injector.providers import Configuration, Factory
 
-from journeys.app.repositories import JourneysHTTPRepository, JourneysCacheRepository
+from journeys.app.repositories import FlightsHTTPRepository, FlightsCacheRepository
 from journeys.core.actions import SearchJourneys
 from journeys.core.handlers import SearchJourneysHandler
-from journeys.core.repositories import JourneysRepository
+from journeys.core.repositories import FlightsRepository
 
 
 class JourneysCommandBus:
@@ -53,7 +53,7 @@ class JourneysContainer(DeclarativeContainer):
 
     Attributes:
         config (Configuration): Holds service configuration parameters.
-        journeys_repository (Factory[JourneysRepository]): Factory for
+        flights_repository (Factory[FlightsRepository]): Factory for
             creating a journeys repository backed by an HTTP provider.
         command_bus (Factory[JourneysCommandBus]): Factory for the command bus,
             mapping actions to their handlers.
@@ -66,12 +66,12 @@ class JourneysContainer(DeclarativeContainer):
     config = Configuration()
 
     use_cache = bool(int(environ.get('CACHE_REFRESH_EVERY', 0)))
-    journeys_repository: Factory[JourneysRepository] = Factory(
-        JourneysCacheRepository,
+    flights_repository: Factory[FlightsRepository] = Factory(
+        FlightsCacheRepository,
         repository_uri=config.cache_uri,
         cache_key=config.cache_key,
     ) if use_cache else Factory(
-        JourneysHTTPRepository,
+        FlightsHTTPRepository,
         provider_base_url=config.journeys_provider_base_url,
         endpoint=config.journeys_provider_endpoint_v1,
     )
@@ -81,7 +81,7 @@ class JourneysContainer(DeclarativeContainer):
         {
             Factory(SearchJourneys): Factory(
                 SearchJourneysHandler,
-                journeys_repository=journeys_repository,
+                flights_repository=flights_repository,
             )
         }
     )

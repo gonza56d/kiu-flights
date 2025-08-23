@@ -3,7 +3,7 @@ import sys
 from os import environ
 from time import sleep
 
-from journeys.app.repositories import JourneysHTTPRepository
+from journeys.app.repositories import FlightsHTTPRepository
 
 from cache_refresher.cache import RedisCacheRepository
 from cache_refresher.cache_refresher import CacheRefresher
@@ -20,7 +20,7 @@ def main():
         sys.exit(0)
     LOGGER.info("Cache refresher enabled.")
     cache_refresher = CacheRefresher(
-        journey_repository=JourneysHTTPRepository(
+        flights_repository=FlightsHTTPRepository(
             provider_base_url=environ.get('JOURNEYS_PROVIDER_BASE_URL', ''),
             endpoint=environ.get('JOURNEYS_PROVIDER_ENDPOINT_V1', ''),
         ),
